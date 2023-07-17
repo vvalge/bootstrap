@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-    <title>Spring Security Example</title>
+  <meta charset="UTF-8">
+  <title>All Users</title>
 </head>
 <body>
-<h1>Welcome to Index PAGE!</h1>
 
+<div th:each ="users : ${users}">
+  <a th:href="@{/users/{id}(id=${users.id})}" th:text="${users.name}">users</a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/admin/users/new" sec:authorize="hasRole('ROLE_ADMIN')">Create new user</a>
+<br/>
+<a href="/login" >logout</a>
 
 </body>
 </html>
