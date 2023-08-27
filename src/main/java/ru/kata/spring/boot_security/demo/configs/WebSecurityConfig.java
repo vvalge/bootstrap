@@ -27,8 +27,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-        //return NoOpPasswordEncoder.getInstance();
+        //return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 
     private final SuccessUserHandler successUserHandler;
@@ -43,8 +43,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-                .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/user/**").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')");
+                .antMatchers("/login", "/error").permitAll()
+                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/user/**").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+                .and()
+                .formLogin().loginPage("/auth/login")
+                .loginProcessingUrl("/process_login")
+                .usernameParameter("user_email")
+                .passwordParameter("user_password")
+                .successHandler(successUserHandler).permitAll();
+
 
 
         http.formLogin()

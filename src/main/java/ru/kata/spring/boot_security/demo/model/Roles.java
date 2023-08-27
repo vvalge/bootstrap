@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
-@Table(name = "t_roles")
+@Table(name = "roles")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Roles implements GrantedAuthority {
@@ -22,6 +23,10 @@ public class Roles implements GrantedAuthority {
 
     @Column(name = "role")
     private String role;
+
+    @Transient
+    @ManyToMany(mappedBy = "roles")
+    private List<Users> users;
 
     @Override
     public String getAuthority() {

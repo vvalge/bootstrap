@@ -14,6 +14,7 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceJPAImpl implements UserService {
@@ -54,7 +55,7 @@ public class UserServiceJPAImpl implements UserService {
     }
 
     @Override
-    public List<Users> index() {
+    public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -68,10 +69,28 @@ public class UserServiceJPAImpl implements UserService {
                 roles1.add(roles);
                 users.setRoles(roles1);
                 users.setPassword(passwordEncoder.encode(users.getPassword()));
-                //users.setPassword(users.getPassword());
+                users.setPassword(users.getPassword());
             }
         }
         userRepository.save(users);
+    }
+
+    @Transactional
+    @Override
+    public void updateUser(Long id, Users user) {
+        Optional<Users> userById = userRepository.findById(id);
+        if (userById.isPresent()) {
+            Users foundUser = userById.get();
+            foundUser.setId(id);
+            foundUser.setAge(user.getAge());
+            foundUser.setEmail(user.getEmail());
+            foundUser.setName(user.getName());
+            foundUser.setLastname(user.getLastname());
+            foundUser.setRoles(user.getRoles());
+            userRepository.save(foundUser);
+        } else {
+            throw new UsernameNotFoundException(String.format("User %s with %s not found", user, id));
+        }
     }
 
     @Override

@@ -8,9 +8,11 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
     Users findById(Long id);
 
-    List<Users> index();
+    List<Users> getAllUsers();
 
     void saveUser(Users users);
+
+    void updateUser(Long id, Users user);
 
     void deleteById(Long id);
 
